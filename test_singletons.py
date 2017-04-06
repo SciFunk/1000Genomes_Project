@@ -46,8 +46,6 @@ for k in entriesToRemove:
     pairs_dict.pop(k, None)
 #print pairs_dict
 
-#pairs_dict = {y:x for x,y in pairs_dict.iteritems()}  #swap key and value in singletons dictionary
-
 for keys in pairs_dict.keys():  # pairs_dict.keys = list of the keys in pairs_dict
   new_dict = {}
   entry1 = pairs_dict[keys]
