@@ -46,16 +46,16 @@ for k in entriesToRemove:
     pairs_dict.pop(k, None)
 #print pairs_dict
 
+#pairs_dict looks like {HG00102: 1, HG00103: 3, ...}
+#sample_info looks like {HG00102: ['ACB', 'AFR', 'female'], ...}
+
 for keys in pairs_dict.keys():  # pairs_dict.keys = list of the keys in pairs_dict
   new_dict = {}
   entry1 = pairs_dict[keys]
   entry2 = sample_info[keys]
   pop = entry2[0]
-  print entry1
   try:
       new_dict[pop] += int(entry1)
   except KeyError:
       new_dict[pop] = entry1
 print new_dict
-  
-  
