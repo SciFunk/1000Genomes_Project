@@ -6,7 +6,7 @@ positions = [] #list of positions with variants to tie to sample name, format [1
 samplenames = [] #a list of samplenames, format ['HG00102', 'HG00103', 'HG00105',...]
 
 with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),"rb"), this will read file line-by-line
-  for line in data: 
+  for line in data:
     if line.startswith('##'): #skip all ~250 comment lines
       continue
     elif line.startswith('#'): #extract line with sample information
@@ -47,28 +47,39 @@ for k in entriesToRemove:
 #pairs_dict looks like {HG00102: 1, HG00103: 3, ...}
 #sample_info looks like {HG00102: ['ACB', 'AFR', 'female'], ...}
 
-ds = [pairs_dict, sample_info]
 new_dict = {}
 for key in pairs_dict:
-    new_dict[key] = tuple(new_dict[key] for new_dict in ds)
-
-print new_dict
+    sample_values = sample_info[key] #['GBR', 'EUR', 'female']
+    pop = sample_values[0]
+    new_dict[key] = pop, pairs_dict[key]
 
 def writeDict(dict, filename, sep):
     with open(filename, "w") as f:
-        for i in dict.keys():
-            f.write(i + " " + str(dict[i]) + "\n")
+        for keys in dict.keys():
+            dict_values = dict[keys]
+            pop = dict_values[0]
+            number = dict_values[1]
+            f.write(keys + " " + pop + " " + str(number) + "\n")
 def readDict(filename, sep):
     with open(filename, "r") as f:
         dict = {}
         for line in f:
+            line = line.strip("\n")
             values = line.split(sep)
-            dict[values[0]] = int(values[1])
+            dict[values[0]] = (values[1], values[2])
         return(dict)
 
-#dict2 = readDict("outputSingletons.txt"," ")     comment out for first file
-#for keys in dict2.keys():
-#  dict2[keys] += new_dict[keys]
-#writeDict(dict2,"outputSingletons.txt"," ")
+dict2 = readDict("output.txt"," ")     
+print dict2
+for keys in dict2.keys():
+  new_dict_values = new_dict[keys]
+  number = int(new_dict_values[1])
+  dict2_values = dict2[keys]
+  entry1 = dict2_values[0]
+  entry2 = int(dict2_values[1])
+  entry2 += number                 #this won't write back to dict2 by itself
+  dict2[keys] = (entry1, entry2)
+print dict2
+writeDict(dict2,"output.txt"," ")
 
-writeDict(new_dict,"outputSingletons.txt"," ")  #use this for first file to get all entries in output file
+#writeDict(new_dict,"output.txt",":")  #use this for first file to get all entries in output file
