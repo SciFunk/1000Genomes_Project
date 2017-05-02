@@ -73,7 +73,7 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
                 variants[i] += 2
             blank_dict = variants_to_blank_dict(samplenames, variants)
             for key in blank_dict:
-                if blank_dict[key] >= pop_percents[key]:
+                if blank_dict[key] > pop_percents[key]:
                     final_dict[key] += 1
 
 print final_dict
