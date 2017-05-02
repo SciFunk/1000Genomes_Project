@@ -2,13 +2,6 @@ import gzip
 import sys
 import math
 
-pop_locations = open('pop_locations.txt', 'r')
-###pop_locations = open('C:\\Users\\SciFunk\\Downloads\\pop_locations.txt', 'r')
-sample_info = {}
-for line in pop_locations:
-  spline = line.split()
-  sample_info[spline[0]] = spline[1:] #can use 1:3 if you only want pos 1:3 as values
-
 def variants_to_blank_dict(samplenames, variants):
   pairs_dict = dict(zip(samplenames, variants))
   entriesToRemove = ('#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT')
@@ -27,6 +20,25 @@ def variants_to_blank_dict(samplenames, variants):
     except KeyError:
          blank_dict[pop] = entry1
   return(blank_dict)
+
+def writeDict(dict, filename, sep):
+    with open(filename, "w") as f:
+        for i in dict.keys():
+            f.write(i + " " + str(dict[i]) + "\n")
+def readDict(filename, sep):
+    with open(filename, "r") as f:
+        dict = {}
+        for line in f:
+            values = line.split(sep)
+            dict[values[0]] = int(values[1])
+        return(dict)
+
+pop_locations = open('pop_locations.txt', 'r')
+###pop_locations = open('C:\\Users\\SciFunk\\Downloads\\pop_locations.txt', 'r')
+sample_info = {}
+for line in pop_locations:
+  spline = line.split()
+  sample_info[spline[0]] = spline[1:] #can use 1:3 if you only want pos 1:3 as values
 
 pop_percents = {'ESN': 5,'GWD': 5,'LWK': 5,'MSL': 4,'YRI': 5,'ACB': 5,
               'ASW': 3,'CLM': 4,'MXL': 3,'PEL': 4,'PUR': 5,'CDX': 4,
@@ -52,37 +64,22 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
         x = spline.count("0|1")
         y = spline.count("1|0")
         z = spline.count("1|1")
-        positions = []
-        if x + y + 2*z < 25:
+        variants = len(samplenames)*[0]
+        theSum = x + y + 2*z
+        if theSum < 25:
             for i,j in enumerate(spline): #i is the index of the element, j is the element itself
               if j == '0|1':
-                positions.append(i)
+                variants[i] += 1
               if j == '1|0':
-                positions.append(i)
+                variants[i] += 1
               if j == '1|1':
-                positions.append(i)
-            variants = len(samplenames)*[0]
-            for i in positions:
-              variants[i] += 1
+                variants[i] += 2
             blank_dict = variants_to_blank_dict(samplenames, variants)
             for key in blank_dict:
                 if blank_dict[key] >= pop_percents[key]:
                     final_dict[key] += 1
-                    print key
-                    print "blank_dict:", blank_dict[key]
-                    print "final_dict:", final_dict[key]
+
 print final_dict
-def writeDict(dict, filename, sep):
-    with open(filename, "w") as f:
-        for i in dict.keys():
-            f.write(i + " " + str(dict[i]) + "\n")
-def readDict(filename, sep):
-    with open(filename, "r") as f:
-        dict = {}
-        for line in f:
-            values = line.split(sep)
-            dict[values[0]] = int(values[1])
-        return(dict)
 
 dict2 = readDict("variants_fig3a.txt"," ")
 for keys in dict2.keys():
