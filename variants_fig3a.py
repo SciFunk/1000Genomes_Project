@@ -33,18 +33,18 @@ def readDict(filename, sep):
             dict[values[0]] = int(values[1])
         return(dict)
 
-#pop_locations = open('pop_locations.txt', 'r')
-pop_locations = open('C:\\Users\\SciFunk\\Downloads\\pop_locations.txt', 'r')
+pop_locations = open('pop_locations.txt', 'r')
+#pop_locations = open('C:\\Users\\SciFunk\\Downloads\\pop_locations.txt', 'r')
 sample_info = {}
 for line in pop_locations:
   spline = line.split()
   sample_info[spline[0]] = spline[1:] #can use 1:3 if you only want pos 1:3 as values
 
-pop_percents = {'ESN': 5,'GWD': 5,'LWK': 5,'MSL': 4,'YRI': 5,'ACB': 5,
-              'ASW': 3,'CLM': 4,'MXL': 3,'PEL': 4,'PUR': 5,'CDX': 4,
-              'CHB': 5,'CHS': 5,'JPT': 5,'KHV': 5,'CEU': 5,'GBR': 4,
-              'FIN': 5,'IBS': 5,'TSI': 5,'BEB': 4,'GIH': 5,'ITU': 5,
-              'PJL': 5,'STU': 5}
+pop_percents = {'ESN': 10,'GWD': 11,'LWK': 9,'MSL': 8,'YRI': 10,'ACB': 8,
+              'ASW': 6,'CLM': 9,'MXL': 6,'PEL': 8,'PUR': 10,'CDX': 9,
+              'CHB': 10,'CHS': 10,'JPT': 10,'KHV': 9,'CEU': 9,'GBR': 9,
+              'FIN': 9,'IBS': 10,'TSI': 10,'BEB': 8,'GIH': 10,'ITU': 10,
+              'PJL': 9,'STU': 10}
 
 samplenames = [] #a list of samplenames format ['HG00102', 'HG00103', 'HG00105',...]
 final_dict = {'ESN': 0, 'GWD': 0, 'LWK': 0, 'MSL': 0, 'YRI': 0, 'ACB': 0, 'ASW': 0, 'CLM': 0,
@@ -52,8 +52,8 @@ final_dict = {'ESN': 0, 'GWD': 0, 'LWK': 0, 'MSL': 0, 'YRI': 0, 'ACB': 0, 'ASW':
       'CEU': 0, 'GBR': 0, 'FIN': 0, 'IBS': 0, 'TSI': 0, 'BEB': 0, 'GIH': 0, 'ITU': 0,
       'PJL': 0, 'STU': 0}
 
-#with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),"rb"), this will read file line-by-line
-with gzip.open('C:\\Users\\SciFunk\\Downloads\\Working\\ALL.chr21.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz') as data:
+with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),"rb"), this will read file line-by-line
+#with gzip.open('C:\\Users\\SciFunk\\Downloads\\Working\\chr1small.vcf.gz') as data:
     for line in data:
       if line.startswith('##'): #skip all ~250 comment lines
           continue
@@ -61,13 +61,14 @@ with gzip.open('C:\\Users\\SciFunk\\Downloads\\Working\\ALL.chr21.phase3_shapeit
           samplenames = line.split()
       else:
         spline = line.split()
+        u = spline.count("2|2")
+        w = spline.count("0|0")
         x = spline.count("0|1")
         y = spline.count("1|0")
         z = spline.count("1|1")
-        w = spline.count("0|0")
         positions = []
-        theSum = x + y + 2*z
-        zeroSum = x + y + 2*w
+        theSum = x + y + 2*z + u
+        zeroSum = x + y + 2*w + u
         if zeroSum < 25:
             for i,j in enumerate(spline): #i is the index of the element, j is the element itself
               if j == '0|1':
@@ -81,7 +82,7 @@ with gzip.open('C:\\Users\\SciFunk\\Downloads\\Working\\ALL.chr21.phase3_shapeit
               variants[i] += 1
             blank_dict = variants_to_blank_dict(samplenames, variants)
             for key in blank_dict:
-                if blank_dict[key] >= pop_percents[key]:
+                if blank_dict[key] > pop_percents[key]:
                     final_dict[key] += 1
 #                     print key
 #                     print "blank_dict:", blank_dict[key]
@@ -99,7 +100,7 @@ with gzip.open('C:\\Users\\SciFunk\\Downloads\\Working\\ALL.chr21.phase3_shapeit
               variants[i] += 1
             blank_dict = variants_to_blank_dict(samplenames, variants)
             for key in blank_dict:
-                if blank_dict[key] >= pop_percents[key]:
+                if blank_dict[key] > pop_percents[key]:
                     final_dict[key] += 1
 #                     print key
 #                     print "blank_dict:", blank_dict[key]
