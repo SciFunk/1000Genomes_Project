@@ -33,8 +33,8 @@ def readDict(filename, sep):
             dict[values[0]] = int(values[1])
         return(dict)
 
-pop_locations = open('pop_locations.txt', 'r')
-#pop_locations = open('C:\\Users\\SciFunk\\Downloads\\pop_locations.txt', 'r')
+#pop_locations = open('pop_locations.txt', 'r')
+pop_locations = open('C:\\Users\\SciFunk\\Downloads\\pop_locations.txt', 'r')
 sample_info = {}
 for line in pop_locations:
   spline = line.split()
@@ -52,8 +52,8 @@ final_dict = {'ESN': 0, 'GWD': 0, 'LWK': 0, 'MSL': 0, 'YRI': 0, 'ACB': 0, 'ASW':
       'CEU': 0, 'GBR': 0, 'FIN': 0, 'IBS': 0, 'TSI': 0, 'BEB': 0, 'GIH': 0, 'ITU': 0,
       'PJL': 0, 'STU': 0}
 
-with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),"rb"), this will read file line-by-line
-#with gzip.open('C:\\Users\\SciFunk\\Downloads\\Working\\chr1small.vcf.gz') as data:
+#with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),"rb"), this will read file line-by-line
+with gzip.open('C:\\Users\\SciFunk\\Downloads\\Working\\chr1small.vcf.gz') as data:
     for line in data:
       if line.startswith('##'): #skip all ~250 comment lines
           continue
@@ -87,7 +87,7 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
 #                     print key
 #                     print "blank_dict:", blank_dict[key]
 #                     print "final_dict:", final_dict[key]
-        if theSum < 25:
+        elif theSum < 25:
             for i,j in enumerate(spline): #i is the index of the element, j is the element itself
               if j == '0|1':
                 positions.append(i)
@@ -105,6 +105,8 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
 #                     print key
 #                     print "blank_dict:", blank_dict[key]
 #                     print "final_dict:", final_dict[key]
+        else:
+            continue
 
 
 print final_dict
