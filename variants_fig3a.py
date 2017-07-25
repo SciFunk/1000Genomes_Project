@@ -61,14 +61,14 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
           samplenames = line.split()
       else:
         spline = line.split()
-        # u = spline.count("2|2")
+        u = spline.count("2|2")
         w = spline.count("0|0")
         x = spline.count("0|1")
         y = spline.count("1|0")
         z = spline.count("1|1")
         positions = []
-        theSum = x + y + 2*z #+ u
-        zeroSum = x + y + 2*w #+ u
+        theSum = x + y + 2*z + u
+        zeroSum = x + y + 2*w + u
         if zeroSum < 25:
             for i,j in enumerate(spline): #i is the index of the element, j is the element itself
               if j == '0|1':
