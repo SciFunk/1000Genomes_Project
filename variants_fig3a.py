@@ -88,21 +88,21 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
                     print "blank_dict:", blank_dict[key]
                     print "final_dict:", final_dict[key]
                     print spline
-        # if theSum < 25:
-        #     for i,j in enumerate(spline): #i is the index of the element, j is the element itself
-        #       if j == '0|1':
-        #         positions.append(i)
-        #       if j == '1|0':
-        #         positions.append(i)
-        #       if j == '1|1':
-        #         positions.append(i)
-        #     variants = len(samplenames)*[0]
-        #     for i in positions:
-        #       variants[i] += 1
-        #     blank_dict = variants_to_blank_dict(samplenames, variants)
-        #     for key in blank_dict:
-        #         if blank_dict[key] > pop_percents[key]:
-        #             final_dict[key] += 1
+        if theSum < 25:
+            for i,j in enumerate(spline): #i is the index of the element, j is the element itself
+              if j == '0|1':
+                positions.append(i)
+              if j == '1|0':
+                positions.append(i)
+              if j == '1|1':
+                positions.append(i)
+            variants = len(samplenames)*[0]
+            for i in positions:
+              variants[i] += 1
+            blank_dict = variants_to_blank_dict(samplenames, variants)
+            for key in blank_dict:
+                if blank_dict[key] > pop_percents[key]:
+                    final_dict[key] += 1
 #                     print key
 #                     print "blank_dict:", blank_dict[key]
 #                     print "final_dict:", final_dict[key]
