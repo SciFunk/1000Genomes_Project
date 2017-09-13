@@ -49,9 +49,7 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
           samplenames = line.split()
       else:
         spline = line.split()
-        t = spline.count("2|0")
         u = spline.count("2|2")
-        v = spline.count("0|2")
         w = spline.count("0|0")
         x = spline.count("0|1")
         y = spline.count("1|0")
@@ -59,8 +57,11 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
         positions = []
         theSum = x + y + 2*z
         zeroSum = x + y + 2*w
-        if t == 0 AND u == 0 AND v == 0:
-            if zeroSum < 25:
+        #if spline[8] == "VT=SNP"
+        if any("SNP" in s for s in spline):
+        #if u == 0:
+            if zeroSum < 26:
+                print "zeroSum:", zeroSum
                 for i,j in enumerate(spline): #i is the index of the element, j is the element itself
                   if j == '0|1':
                     positions.append(i)
@@ -75,11 +76,13 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
                 for key in blank_dict:
                     if blank_dict[key] > pop_percents[key]:
                         final_dict[key] += 1
-                        print key
-                        print "blank_dict:", blank_dict[key]
-                        print "final_dict:", final_dict[key]
-                        print spline
-            if theSum < 25:
+
+                       # print key
+                       # print "blank_dict:", blank_dict[key]
+                       # print "final_dict:", final_dict[key]
+                       # print spline
+            if theSum < 26:
+                print "theSum:", theSum
                 for i,j in enumerate(spline): #i is the index of the element, j is the element itself
                   if j == '0|1':
                     positions.append(i)
@@ -94,9 +97,11 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
                 for key in blank_dict:
                     if blank_dict[key] > pop_percents[key]:
                         final_dict[key] += 1
-                        print key
-                        print "blank_dict:", blank_dict[key]
-                        print "final_dict:", final_dict[key]
+                        print spline[2], key, blank_dict[key]
+                        print spline
+                       # print key
+                       # print "blank_dict:", blank_dict[key]
+                       # print "final_dict:", final_dict[key]
 
 
     print final_dict
