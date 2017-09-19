@@ -49,62 +49,61 @@ with gzip.open(sys.argv[1]) as data: #instead of data = gzip.open((sys.argv[1]),
           samplenames = line.split()
       else:
         spline = line.split()
-        u = spline.count("2|2")
-        w = spline.count("0|0")
+        #w = spline.count("0|0")
         x = spline.count("0|1")
         y = spline.count("1|0")
         z = spline.count("1|1")
         positions = []
+        variants = len(samplenames)*[0]
         theSum = x + y + 2*z
-        zeroSum = x + y + 2*w
-        #if spline[8] == "VT=SNP"
-        if any("SNP" in s for s in spline):
+        #zeroSum = x + y + 2*w
+        if len(spline[3]) == 1 and len(spline[4]) == 1:
+        #if any("SNP" in s for s in spline):
         #if u == 0:
-            if zeroSum < 26:
-                print "zeroSum:", zeroSum
-                for i,j in enumerate(spline): #i is the index of the element, j is the element itself
-                  if j == '0|1':
-                    positions.append(i)
-                  if j == '1|0':
-                    positions.append(i)
-                  if j == '0|0':
-                    positions.append(i)
-                variants = len(samplenames)*[0]
-                for i in positions:
-                  variants[i] += 1
-                blank_dict = variants_to_blank_dict(samplenames, variants)
-                for key in blank_dict:
-                    if blank_dict[key] > pop_percents[key]:
-                        final_dict[key] += 1
-
-                       # print key
-                       # print "blank_dict:", blank_dict[key]
-                       # print "final_dict:", final_dict[key]
-                       # print spline
+            # if zeroSum < 26:
+            #     print "zeroSum:", zeroSum
+            #     for i,j in enumerate(spline): #i is the index of the element, j is the element itself
+            #       if j == '0|1':
+            #         positions.append(i)
+            #       if j == '1|0':
+            #         positions.append(i)
+            #       if j == '0|0':
+            #         positions.append(i)
+            #     variants = len(samplenames)*[0]
+            #     for i in positions:
+            #       variants[i] += 1
+            #     blank_dict = variants_to_blank_dict(samplenames, variants)
+            #     for key in blank_dict:
+            #         if blank_dict[key] > pop_percents[key]:
+            #             final_dict[key] += 1
+            #
+            #            # print key
+            #            # print "blank_dict:", blank_dict[key]
+            #            # print "final_dict:", final_dict[key]
+            #            # print spline
             if theSum < 26:
-                print "theSum:", theSum
                 for i,j in enumerate(spline): #i is the index of the element, j is the element itself
                   if j == '0|1':
-                    positions.append(i)
+                    variants[i] += 1
                   if j == '1|0':
-                    positions.append(i)
+                    variants[i] += 1
                   if j == '1|1':
-                    positions.append(i)
-                variants = len(samplenames)*[0]
-                for i in positions:
-                  variants[i] += 1
+                    variants[i] += 2
+#                 variants = len(samplenames)*[0]
+#                 for i in positions:
+#                   variants[i] += 1
                 blank_dict = variants_to_blank_dict(samplenames, variants)
                 for key in blank_dict:
                     if blank_dict[key] > pop_percents[key]:
                         final_dict[key] += 1
-                        print spline[2], key, blank_dict[key]
-                        print spline
+                        print(("theSum:", theSum), spline[1], spline[2],key, blank_dict[key])
+                        print(spline[7])
                        # print key
                        # print "blank_dict:", blank_dict[key]
                        # print "final_dict:", final_dict[key]
 
 
-    print final_dict
+    print(final_dict)
 
     # dict2 = readDict("variants_fig3a.txt"," ")
     # for keys in dict2.keys():
